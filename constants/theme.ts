@@ -28,13 +28,6 @@ export const typography = {
     xxl: 24,
     xxxl: 32,
   },
-  fontWeights: {
-    light: "300",
-    regular: "400",
-    medium: "500",
-    semibold: "600",
-    bold: "700",
-  },
   lineHeights: {
     tight: 1.2,
     normal: 1.4,
