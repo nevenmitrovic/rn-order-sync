@@ -1,18 +1,48 @@
-import { borderRadius, colors } from "@/constants/theme";
 import { StyleSheet, Text, View } from "react-native";
+
+import { borderRadius, colors, spacing, typography } from "@/constants/theme";
+import FormTextInput from "../common/FormTextInput";
+import MainButton from "../common/MainButton";
 
 export default function SignInForm() {
   return (
-    <View>
-      <Text style={styles.form}>SignInForm</Text>
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.headerText}>Sign In</Text>
+      </View>
+      <View style={styles.form}>
+        <FormTextInput
+          placeholder="Enter username"
+          label="Username"
+          onChangeText={() => {}}
+        />
+        <FormTextInput
+          placeholder="Enter password"
+          label="Password"
+          onChangeText={() => {}}
+        />
+        <MainButton buttonText="Sign in" onPress={() => {}} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  form: {
+  container: {
     flex: 1,
-    borderRadius: borderRadius.md,
     backgroundColor: colors.cardBackground,
+    borderRadius: borderRadius.xxl,
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.xl,
+  },
+  headerText: {
+    color: colors.colorForeground,
+    fontSize: typography.fontSizes.xxl,
+    fontWeight: "bold",
+    letterSpacing: 2,
+  },
+  form: {
+    paddingTop: spacing.xl,
+    gap: spacing.xxl,
   },
 });

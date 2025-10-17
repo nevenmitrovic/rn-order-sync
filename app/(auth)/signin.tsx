@@ -1,5 +1,5 @@
 import SignInForm from "@/components/auth/SignInForm";
-import { colors, typography } from "@/constants/theme";
+import { colors, spacing, typography } from "@/constants/theme";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -22,14 +22,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colorForeground,
   },
   logoContainer: {
-    height: 200,
+    paddingTop: 50,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
   logoText: {
     fontSize: typography.fontSizes.xxxl,
-    letterSpacing: 1,
+    letterSpacing: 3,
     color: colors.colorAccent,
     fontWeight: "bold",
+    paddingBottom: spacing.xl,
   },
 });
