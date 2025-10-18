@@ -4,6 +4,7 @@
     "email": "admin@example.com",
     "password": "password123",
     "name": "Admin User",
+    "address": "Example",
     "role": "admin"
   },
   {
@@ -11,6 +12,7 @@
     "email": "user@example.com",
     "password": "password123",
     "name": "Regular User",
+    "address": "Example",
     "role": "user"
   }
 ]

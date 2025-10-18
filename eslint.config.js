@@ -6,12 +6,13 @@ module.exports = defineConfig([
   expoConfig,
   eslintPluginPrettierRecommended,
   {
-    ignores: ["dist/*", "server/"],
+    ignores: ["dist/*", "server/**"],
     plugins: {
       "react-native": require("eslint-plugin-react-native"),
     },
     rules: {
       "react-native/no-unused-styles": "error",
+      "comma-dangle": ["error", "es5"],
     },
   },
 ]);

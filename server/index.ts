@@ -9,6 +9,7 @@ interface User {
   email: string;
   password: string;
   name: string;
+  address: string;
   role: "admin" | "user";
 }
 
@@ -39,7 +40,14 @@ const SECRET_KEY: string = "your-secret-key";
 // Load users from JSON file
 const loadUsers = (): User[] => {
   try {
-    const usersPath = path.join(__dirname, "../db/users.json");
+    const usersPath = path.join(__dirname, "db/users.json");
+
+    // Check if file exists
+    if (!fs.existsSync(usersPath)) {
+      console.error(`Users file not found at: ${usersPath}`);
+      return [];
+    }
+
     const usersData = fs.readFileSync(usersPath, "utf8");
     return JSON.parse(usersData);
   } catch (error) {
@@ -61,7 +69,7 @@ const saveUsers = (users: User[]): void => {
 const authenticateToken = (
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
@@ -87,12 +95,15 @@ app.post(
   (req: Request<{}, {}, LoginRequest>, res: Response): void => {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      res.status(400).json({ error: "Email and password are required" });
+      return;
+    }
+
     const users = loadUsers();
-    const user = users.find((u) => {
-      if (u.email === email && u.password === password) {
-        return u;
-      }
-    });
+    const user = users.find(
+      (u) => u.email === email && u.password === password,
+    );
     if (!user) {
       res.status(401).json({ error: "Invalid credentials" });
       return;
@@ -100,7 +111,7 @@ app.post(
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
-      SECRET_KEY
+      SECRET_KEY,
     );
 
     res.json({
@@ -112,17 +123,17 @@ app.post(
         role: user.role,
       },
     });
-  }
+  },
 );
 
 // Register endpoint
 app.post(
   "/auth/register",
   (req: Request<{}, {}, RegisterRequest>, res: Response): void => {
-    const { email, password, name } = req.body;
+    const { email, password, name, address } = req.body;
 
     // Validate input
-    if (!email || !password || !name) {
+    if (!email || !password || !name || !address) {
       res.status(400).json({ error: "Email, password, and name are required" });
       return;
     }
@@ -142,6 +153,7 @@ app.post(
       email,
       password,
       name,
+      address,
       role: "user",
     };
 
@@ -151,7 +163,7 @@ app.post(
     // Generate token
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email, role: newUser.role },
-      SECRET_KEY
+      SECRET_KEY,
     );
 
     res.status(201).json({
@@ -163,7 +175,7 @@ app.post(
         role: newUser.role,
       },
     });
-  }
+  },
 );
 
 // Get all users (admin only)
@@ -184,11 +196,16 @@ app.get(
         email: u.email,
         name: u.name,
         role: u.role,
-      }))
+      })),
     );
-  }
+  },
 );
 
-app.listen(3001, (): void => {
+console.log("Starting server...");
+app.listen(3001, (error?: Error): void => {
+  if (error) {
+    console.error("Error starting server:", error);
+    process.exit(1);
+  }
   console.log("Mock API server running on http://localhost:3001");
 });
