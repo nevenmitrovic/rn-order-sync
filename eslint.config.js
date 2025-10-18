@@ -6,7 +6,7 @@ module.exports = defineConfig([
   expoConfig,
   eslintPluginPrettierRecommended,
   {
-    ignores: ["dist/*"],
+    ignores: ["dist/*", "server/"],
     plugins: {
       "react-native": require("eslint-plugin-react-native"),
     },
