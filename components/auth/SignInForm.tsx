@@ -20,6 +20,7 @@ export default function SignInForm() {
           placeholder="Enter password"
           label="Password"
           onChangeText={() => {}}
+          secureTextEntry
         />
         <MainButton buttonText="Sign in" onPress={() => {}} />
       </View>

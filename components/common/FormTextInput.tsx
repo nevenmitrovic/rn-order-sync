@@ -7,12 +7,14 @@ interface InputProps {
   placeholder: string;
   label: string;
   onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
 }
 
 export default function FormTextInput({
   placeholder,
   label,
   onChangeText,
+  secureTextEntry,
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -33,6 +35,7 @@ export default function FormTextInput({
         onChangeText={onChangeText}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
+        secureTextEntry={secureTextEntry ? true : undefined}
       />
     </View>
   );
