@@ -1,4 +1,10 @@
-import { Text, TextInput, StyleSheet, View } from "react-native";
+import {
+  Text,
+  TextInput,
+  StyleSheet,
+  View,
+  type KeyboardType,
+} from "react-native";
 
 import { borderRadius, colors, spacing, typography } from "@/constants/theme";
 import { useState } from "react";
@@ -8,6 +14,8 @@ interface InputProps {
   label: string;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
+  value: string | undefined;
+  keyboardType?: KeyboardType;
 }
 
 export default function FormTextInput({
@@ -15,6 +23,8 @@ export default function FormTextInput({
   label,
   onChangeText,
   secureTextEntry,
+  value,
+  keyboardType = "default",
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -36,6 +46,8 @@ export default function FormTextInput({
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         secureTextEntry={secureTextEntry ? true : undefined}
+        value={value}
+        keyboardType={keyboardType}
       />
     </View>
   );

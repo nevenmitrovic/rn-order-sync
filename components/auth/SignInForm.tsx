@@ -1,29 +1,70 @@
 import { StyleSheet, Text, View } from "react-native";
+import { Link } from "expo-router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
 
 import { borderRadius, colors, spacing, typography } from "@/constants/theme";
 import FormTextInput from "../common/FormTextInput";
 import MainButton from "../common/MainButton";
-import { Link } from "expo-router";
+import { signInSchema } from "./validations/signin";
+import { SignInRequestType } from "./types";
 
 export default function SignInForm() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInRequestType>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const onSubmit = (data: SignInRequestType) => {
+    console.log(data);
+  };
+
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.headerText}>Sign In</Text>
       </View>
       <View style={styles.form}>
-        <FormTextInput
-          placeholder="Enter username"
-          label="Username"
-          onChangeText={() => {}}
-        />
-        <FormTextInput
-          placeholder="Enter password"
-          label="Password"
-          onChangeText={() => {}}
-          secureTextEntry
-        />
-        <MainButton buttonText="Sign in" onPress={() => {}} />
+        <View style={styles.formField}>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <FormTextInput
+                placeholder="Enter email"
+                label="Email"
+                value={value}
+                onChangeText={onChange}
+                keyboardType="email-address"
+              />
+            )}
+          />
+          {errors.email && (
+            <Text style={styles.error}>{errors.email.message}</Text>
+          )}
+        </View>
+        <View style={styles.formField}>
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <FormTextInput
+                placeholder="Enter password"
+                label="Password"
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry
+              />
+            )}
+          />
+          {errors.password && (
+            <Text style={styles.error}>{errors.password.message}</Text>
+          )}
+        </View>
+        <MainButton buttonText="Sign in" onPress={handleSubmit(onSubmit)} />
         <View style={styles.navigationContainer}>
           <Text>{`Don't`} have an account?</Text>
           <Link style={styles.link} href={"/signup"}>
@@ -53,6 +94,9 @@ const styles = StyleSheet.create({
     paddingTop: spacing.xl,
     gap: spacing.xxl,
   },
+  formField: {
+    gap: spacing.xs,
+  },
   link: {
     fontWeight: "bold",
     color: colors.colorAccent,
@@ -62,5 +106,9 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     alignItems: "center",
     justifyContent: "center",
+  },
+  error: {
+    color: colors.error,
+    fontSize: typography.fontSizes.sm,
   },
 });
