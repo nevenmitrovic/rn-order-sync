@@ -6,26 +6,26 @@ import { useForm, Controller } from "react-hook-form";
 import { borderRadius, colors, spacing, typography } from "@/constants/theme";
 import FormTextInput from "../common/FormTextInput";
 import MainButton from "../common/MainButton";
-import { signInSchema } from "./validations";
-import { SignInRequestType } from "./types";
+import { signUpSchema } from "./validations";
+import { SignUpRequestType } from "./types";
 
-export default function SignInForm() {
+export default function SignUpForm() {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInRequestType>({
-    resolver: zodResolver(signInSchema),
+  } = useForm<SignUpRequestType>({
+    resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = (data: SignInRequestType) => {
+  const onSubmit = (data: SignUpRequestType) => {
     console.log(data);
   };
 
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.headerText}>Sign In</Text>
+        <Text style={styles.headerText}>Sign Up</Text>
       </View>
       <View style={styles.form}>
         <View style={styles.formField}>
@@ -64,10 +64,44 @@ export default function SignInForm() {
             <Text style={styles.error}>{errors.password.message}</Text>
           )}
         </View>
+        <View style={styles.formField}>
+          <Controller
+            name="address"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <FormTextInput
+                placeholder="Enter address"
+                label="Address"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
+          {errors.address && (
+            <Text style={styles.error}>{errors.address.message}</Text>
+          )}
+        </View>
+        <View style={styles.formField}>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <FormTextInput
+                placeholder="Enter name"
+                label="Name"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
+          {errors.name && (
+            <Text style={styles.error}>{errors.name.message}</Text>
+          )}
+        </View>
         <MainButton buttonText="Sign in" onPress={handleSubmit(onSubmit)} />
         <View style={styles.navigationContainer}>
-          <Text>{`Don't`} have an account?</Text>
-          <Link style={styles.link} href={"/signup"}>
+          <Text>Already have an account?</Text>
+          <Link style={styles.link} href={"/signin"}>
             Sign Up
           </Link>
         </View>
@@ -80,7 +114,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.cardBackground,
-    borderRadius: borderRadius.xxl,
+    borderTopRightRadius: borderRadius.xxl,
+    borderTopLeftRadius: borderRadius.xxl,
     paddingVertical: spacing.xxl,
     paddingHorizontal: spacing.xl,
   },
