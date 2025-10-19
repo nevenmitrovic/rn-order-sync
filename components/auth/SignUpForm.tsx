@@ -98,7 +98,7 @@ export default function SignUpForm() {
             <Text style={styles.error}>{errors.name.message}</Text>
           )}
         </View>
-        <MainButton buttonText="Sign in" onPress={handleSubmit(onSubmit)} />
+        <MainButton buttonText="Sign up" onPress={handleSubmit(onSubmit)} />
         <View style={styles.navigationContainer}>
           <Text>Already have an account?</Text>
           <Link style={styles.link} href={"/signin"}>

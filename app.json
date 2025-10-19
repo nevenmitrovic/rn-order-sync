@@ -22,7 +22,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.nevenub.rnordersync"
     },
     "web": {
       "favicon": "./assets/favicon.png"
