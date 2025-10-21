@@ -102,7 +102,7 @@ export default function SignUpForm() {
         <View style={styles.navigationContainer}>
           <Text>Already have an account?</Text>
           <Link style={styles.link} href={"/signin"}>
-            Sign Up
+            Sign In
           </Link>
         </View>
       </View>
