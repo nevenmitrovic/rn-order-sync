@@ -14,7 +14,6 @@ export async function getAuthToken(): Promise<string | null> {
     if (token) {
       return token;
     } else {
-      console.log("No auth token found.");
       return null;
     }
   } catch (error) {

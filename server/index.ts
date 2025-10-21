@@ -58,7 +58,7 @@ const loadUsers = (): User[] => {
 // Save users to JSON file
 const saveUsers = (users: User[]): void => {
   try {
-    const usersPath = path.join(__dirname, "../db/users.json");
+    const usersPath = path.join(__dirname, "db/users.json");
     fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
   } catch (error) {
     console.error("Error saving users:", error);

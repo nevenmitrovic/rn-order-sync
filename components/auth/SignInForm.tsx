@@ -8,6 +8,7 @@ import FormTextInput from "../common/FormTextInput";
 import MainButton from "../common/MainButton";
 import { signInSchema } from "./validations";
 import { SignInRequestType } from "./types";
+import signIn from "./services";
 
 export default function SignInForm() {
   const {
@@ -19,7 +20,7 @@ export default function SignInForm() {
   });
 
   const onSubmit = (data: SignInRequestType) => {
-    console.log(data);
+    signIn(data);
   };
 
   return (

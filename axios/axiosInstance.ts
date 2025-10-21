@@ -1,8 +1,17 @@
 import axios, { type AxiosInstance } from "axios";
+import { Platform } from "react-native";
 
 import { getAuthToken } from "@/components/auth/utils";
 
-const BASE_URL = process.env.EXPO_BASE_URL;
+// Android emulator uses 10.0.2.2 to access localhost
+const getBaseURL = () => {
+  if (Platform.OS === "android") {
+    return "http://10.0.2.2:3001/" + process.env.EXPO_PUBLIC_API_BASE_URL;
+  }
+  return "http://localhost:3001/" + process.env.EXPO_PUBLIC_API_BASE_URL;
+};
+
+const BASE_URL = getBaseURL();
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
