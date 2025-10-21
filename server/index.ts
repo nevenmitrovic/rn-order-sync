@@ -91,7 +91,7 @@ const authenticateToken = (
 
 // Login endpoint
 app.post(
-  "/auth/login",
+  "/api/auth/login",
   (req: Request<{}, {}, LoginRequest>, res: Response): void => {
     const { email, password } = req.body;
 
@@ -128,7 +128,7 @@ app.post(
 
 // Register endpoint
 app.post(
-  "/auth/register",
+  "/api/auth/register",
   (req: Request<{}, {}, RegisterRequest>, res: Response): void => {
     const { email, password, name, address } = req.body;
 
@@ -180,7 +180,7 @@ app.post(
 
 // Get all users (admin only)
 app.get(
-  "/users",
+  "/api/users",
   authenticateToken,
   (req: AuthenticatedRequest, res: Response): void => {
     if (req.user?.role !== "admin") {
