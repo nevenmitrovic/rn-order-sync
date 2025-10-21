@@ -1,11 +1,14 @@
 import axiosInstance from "@/axios/axiosInstance";
 import { Toast } from "toastify-react-native";
 
-import { SignInRequestType, SignInResponseType } from "../types";
+import { IUser, SignInRequestType, SignInResponseType } from "../types";
 import { AxiosError } from "axios";
 import { saveAuthToken } from "../utils";
 
-export default async function signIn({ email, password }: SignInRequestType) {
+export default async function signIn({
+  email,
+  password,
+}: SignInRequestType): Promise<Omit<IUser, "password"> | undefined> {
   try {
     const res = await axiosInstance.post("/auth/login", {
       email,
@@ -15,7 +18,7 @@ export default async function signIn({ email, password }: SignInRequestType) {
 
     await saveAuthToken(response.token);
     Toast.success("You are successfully signed in.");
-    return response;
+    return response.user;
   } catch (error) {
     console.error(error);
 

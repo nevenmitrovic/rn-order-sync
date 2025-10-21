@@ -10,11 +10,10 @@ import Entypo from "@expo/vector-icons/Entypo";
 
 import { queryClient } from "@/react-query/queryClient";
 import { colors } from "@/constants/theme";
+import { AuthProvider, useAuth } from "@/components/auth/contexts/AuthContext";
 
-const isAdmin = false;
-const isLogged = false;
-
-export default function RootLayout() {
+function Layout() {
+  const { isAdmin, isLogged } = useAuth();
   const onCopy = async (text: string) => {
     try {
       // For Expo:
@@ -72,5 +71,13 @@ export default function RootLayout() {
         <DevToolsBubble onCopy={onCopy} queryClient={queryClient} />
       </SafeAreaProvider>
     </QueryClientProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <Layout />
+    </AuthProvider>
   );
 }
