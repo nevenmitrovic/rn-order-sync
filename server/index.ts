@@ -12,6 +12,17 @@ interface User {
   address: string;
   role: "admin" | "user";
 }
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  pricePerKg?: number;
+  pricePerLiter?: number;
+  pricePerDozen?: number;
+  unit: "liter" | "kg" | "dozen";
+  availableQuantity: number;
+  harvestDate: string;
+}
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -62,6 +73,34 @@ const saveUsers = (users: User[]): void => {
     fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
   } catch (error) {
     console.error("Error saving users:", error);
+  }
+};
+// Load products from JSON file
+const loadProducts = (): Product[] => {
+  try {
+    const productsPath = path.join(__dirname, "db/products.json");
+
+    // Check if file exists
+    if (!fs.existsSync(productsPath)) {
+      console.error(`Products file not found at: ${productsPath}`);
+      return [];
+    }
+
+    const productsData = fs.readFileSync(productsPath, "utf8");
+    return JSON.parse(productsData);
+  } catch (error) {
+    console.error("Error loading products:", error);
+    return [];
+  }
+};
+
+// Save products to JSON file
+const saveProducts = (products: Product[]): void => {
+  try {
+    const productsPath = path.join(__dirname, "db/products.json");
+    fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+  } catch (error) {
+    console.error("Error saving products:", error);
   }
 };
 
@@ -198,6 +237,86 @@ app.get(
         role: u.role,
       })),
     );
+  },
+);
+
+// Get all products
+app.get(
+  "/api/products",
+  authenticateToken,
+  (req: AuthenticatedRequest, res: Response): void => {
+    const products = loadProducts();
+    res.json(products);
+  },
+);
+
+// Create new product (admin only)
+app.post(
+  "/api/products",
+  authenticateToken,
+  (req: AuthenticatedRequest, res: Response): void => {
+    if (req.user?.role !== "admin") {
+      res.status(403).json({ error: "Admin access required" });
+      return;
+    }
+
+    const {
+      name,
+      category,
+      pricePerKg,
+      pricePerLiter,
+      pricePerDozen,
+      unit,
+      availableQuantity,
+      harvestDate,
+    } = req.body;
+
+    // Validate required fields
+    if (!name || !category || !unit || !availableQuantity || !harvestDate) {
+      res.status(400).json({
+        error:
+          "Name, category, unit, available quantity, and harvest date are required",
+      });
+      return;
+    }
+
+    // Validate unit-specific pricing
+    if (unit === "kg" && !pricePerKg) {
+      res.status(400).json({ error: "Price per kg is required for kg unit" });
+      return;
+    }
+    if (unit === "liter" && !pricePerLiter) {
+      res
+        .status(400)
+        .json({ error: "Price per liter is required for liter unit" });
+      return;
+    }
+    if (unit === "dozen" && !pricePerDozen) {
+      res
+        .status(400)
+        .json({ error: "Price per dozen is required for dozen unit" });
+      return;
+    }
+
+    const products = loadProducts();
+
+    // Create new product
+    const newProduct: Product = {
+      id: products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1,
+      name: name.trim(),
+      category: category.trim(),
+      pricePerKg,
+      pricePerLiter,
+      pricePerDozen,
+      unit,
+      availableQuantity: Number(availableQuantity),
+      harvestDate,
+    };
+
+    products.push(newProduct);
+    saveProducts(products);
+
+    res.status(201).json(newProduct);
   },
 );
 
