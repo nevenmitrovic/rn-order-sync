@@ -1,4 +1,5 @@
-import { createContext, use, useState } from "react";
+import { createContext, use, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import type {
   IAuthContext,
@@ -14,13 +15,39 @@ const AuthContext = createContext<IAuthContext | undefined>(undefined);
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<Omit<IUser, "password"> | undefined>();
 
+  useEffect(() => {
+    const getUserFromStorage = async () => {
+      try {
+        const user = await AsyncStorage.getItem("user");
+        if (!user) {
+          setUser(undefined);
+        } else {
+          setUser(JSON.parse(user));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserFromStorage();
+  }, []);
+
   const handleSignIn = async ({ email, password }: SignInRequestType) => {
-    const user = await signIn({ email, password });
-    setUser(user);
+    try {
+      const user = await signIn({ email, password });
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+    } catch (error) {
+      console.error(error);
+    }
   };
   const handleSignOut = async () => {
-    await deleteAuthToken();
-    setUser(undefined);
+    try {
+      await deleteAuthToken();
+      await AsyncStorage.removeItem("user");
+      setUser(undefined);
+    } catch (error) {
+      console.error(error);
+    }
   };
   const handleSignUp = async ({
     email,
@@ -28,8 +55,13 @@ export const AuthProvider = ({ children }: any) => {
     name,
     address,
   }: SignUpRequestType) => {
-    const user = await signUp({ email, password, name, address });
-    setUser(user);
+    try {
+      const user = await signUp({ email, password, name, address });
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
