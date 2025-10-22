@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function ClientProductsScreen() {
+export default function CartScreen() {
   return (
     <View style={styles.container}>
-      <Text>Client Products Screen</Text>
+      <Text>Cart Screen</Text>
     </View>
   );
 }

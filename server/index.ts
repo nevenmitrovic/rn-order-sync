@@ -102,7 +102,7 @@ app.post(
 
     const users = loadUsers();
     const user = users.find(
-      (u) => u.email === email && u.password === password,
+      (u) => u.email.toLowerCase().trim() === email && u.password === password,
     );
     if (!user) {
       res.status(401).json({ error: "Invalid credentials" });
@@ -150,7 +150,7 @@ app.post(
     // Create new user
     const newUser: User = {
       id: users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1,
-      email,
+      email: email.toLowerCase().trim(),
       password,
       name,
       address,
