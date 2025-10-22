@@ -10,9 +10,10 @@ import { createTitle, errorHandler } from "./utils";
 export const queryClientOptions: QueryClientConfig = {
   defaultOptions: {
     queries: {
-      staleTime: 600000, // 10min
-      gcTime: 900000, // 15min
       refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      staleTime: 1000 * 60 * 60, // 1h
+      gcTime: 1000 * 60 * 60 * 2, // 2h
     },
   },
   queryCache: new QueryCache({
