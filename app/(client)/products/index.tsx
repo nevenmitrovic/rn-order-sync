@@ -17,7 +17,9 @@ export default function ClientProductsScreen() {
       contentContainerStyle={styles.contentContainer}
       data={products}
       renderItem={({ item }) => <ProductCard product={item} />}
-      ListEmptyComponent={() => <Text>Product list is empty.</Text>}
+      ListEmptyComponent={() => (
+        <Text style={styles.emptyComponent}>Product list is empty.</Text>
+      )}
       horizontal={false}
       numColumns={2}
       columnWrapperStyle={styles.columnWrapper}
@@ -35,10 +37,8 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   emptyComponent: {
-    justifyContent: "center",
-    flexDirection: "row",
+    textAlign: "center",
     fontSize: typography.fontSizes.xxl,
-    fontWeight: "bold",
     color: colors.colorForeground,
   },
   columnWrapper: {
