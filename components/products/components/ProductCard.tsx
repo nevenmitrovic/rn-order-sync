@@ -14,7 +14,7 @@ import { borderRadius, colors, spacing, typography } from "@/constants/theme";
 
 export default function ProductCard({ product }: { product: IProduct }) {
   return (
-    <Link href="/products/:productId" asChild>
+    <Link href={`/products/${product.id}`} asChild>
       <Pressable style={styles.container}>
         <ProductImage />
         <View style={styles.productInfo}>

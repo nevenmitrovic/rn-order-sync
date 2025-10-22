@@ -21,6 +21,7 @@ export default function Layout() {
           name="products"
           options={{
             title: "Products",
+            headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <Entypo name="shop" size={size} color={color} />
             ),

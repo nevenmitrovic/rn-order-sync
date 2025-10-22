@@ -1,5 +1,4 @@
 import { ActivityIndicator, StyleSheet, Text, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useGetProducts } from "@/components/products/hooks/useGetProducts";
 import { colors, spacing, typography } from "@/constants/theme";
@@ -13,18 +12,16 @@ export default function ClientProductsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        data={products}
-        renderItem={({ item }) => <ProductCard product={item} />}
-        ListEmptyComponent={() => <Text>Product list is empty.</Text>}
-        horizontal={false}
-        numColumns={2}
-        columnWrapperStyle={styles.columnWrapper}
-      />
-    </SafeAreaView>
+    <FlatList
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      data={products}
+      renderItem={({ item }) => <ProductCard product={item} />}
+      ListEmptyComponent={() => <Text>Product list is empty.</Text>}
+      horizontal={false}
+      numColumns={2}
+      columnWrapperStyle={styles.columnWrapper}
+    />
   );
 }
 
