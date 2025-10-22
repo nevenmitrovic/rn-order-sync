@@ -251,6 +251,30 @@ app.get(
   },
 );
 
+// Get product by ID
+app.get(
+  "/api/products/:id",
+  authenticateToken,
+  (req: AuthenticatedRequest, res: Response): void => {
+    const productId = parseInt(req.params.id);
+
+    if (isNaN(productId)) {
+      res.status(400).json({ error: "Invalid product ID" });
+      return;
+    }
+
+    const products = loadProducts();
+    const product = products.find((p) => p.id === productId);
+
+    if (!product) {
+      res.status(404).json({ error: "Product not found" });
+      return;
+    }
+
+    res.json(product);
+  },
+);
+
 // Create new product (admin only)
 app.post(
   "/api/products",
