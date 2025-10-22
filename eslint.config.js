@@ -1,16 +1,17 @@
 import pluginQuery from "@tanstack/eslint-plugin-query";
-const { defineConfig } = require("eslint/config");
-const expoConfig = require("eslint-config-expo/flat");
-const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
+import { defineConfig } from "eslint/config";
+import expoConfig from "eslint-config-expo/flat.js";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import reactNativePlugin from "eslint-plugin-react-native";
 
-module.exports = defineConfig([
+export default defineConfig([
   expoConfig,
   eslintPluginPrettierRecommended,
   ...pluginQuery.configs["flat/recommended"],
   {
     ignores: ["dist/*", "server/**"],
     plugins: {
-      "react-native": require("eslint-plugin-react-native"),
+      "react-native": reactNativePlugin,
     },
     rules: {
       "react-native/no-unused-styles": "error",
