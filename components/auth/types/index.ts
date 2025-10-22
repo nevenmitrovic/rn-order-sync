@@ -13,6 +13,12 @@ export interface IAuthContext {
   user: Omit<IUser, "password"> | undefined;
   signIn: ({ email, password }: SignInRequestType) => Promise<void>;
   signOut: () => Promise<void>;
+  signUp: ({
+    email,
+    password,
+    name,
+    address,
+  }: SignUpRequestType) => Promise<void>;
   isAdmin: boolean;
   isLogged: boolean;
 }
@@ -23,3 +29,4 @@ export type SignInResponseType = {
   token: string;
   user: Omit<IUser, "password">;
 };
+export type SignUpResponseType = SignInResponseType;

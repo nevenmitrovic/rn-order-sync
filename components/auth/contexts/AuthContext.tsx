@@ -1,7 +1,12 @@
 import { createContext, use, useState } from "react";
 
-import type { IAuthContext, IUser, SignInRequestType } from "../types";
-import signIn from "../services";
+import type {
+  IAuthContext,
+  IUser,
+  SignInRequestType,
+  SignUpRequestType,
+} from "../types";
+import { signIn, signUp } from "../services";
 import { deleteAuthToken } from "../utils";
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -17,6 +22,15 @@ export const AuthProvider = ({ children }: any) => {
     await deleteAuthToken();
     setUser(undefined);
   };
+  const handleSignUp = async ({
+    email,
+    password,
+    name,
+    address,
+  }: SignUpRequestType) => {
+    const user = await signUp({ email, password, name, address });
+    setUser(user);
+  };
 
   return (
     <AuthContext.Provider
@@ -24,7 +38,8 @@ export const AuthProvider = ({ children }: any) => {
         user,
         signIn: handleSignIn,
         signOut: handleSignOut,
-        isAdmin: !!user?.role,
+        signUp: handleSignUp,
+        isAdmin: user?.role === "admin" ? true : false,
         isLogged: !!user,
       }}
     >

@@ -14,5 +14,13 @@
     "name": "Regular User",
     "address": "Example",
     "role": "user"
+  },
+  {
+    "id": 3,
+    "email": "testUser@gmail.com",
+    "password": "password123",
+    "name": "Test User",
+    "address": "Test Address",
+    "role": "user"
   }
 ]

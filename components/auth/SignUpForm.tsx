@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 
@@ -8,8 +8,11 @@ import FormTextInput from "../common/FormTextInput";
 import MainButton from "../common/MainButton";
 import { signUpSchema } from "./validations";
 import { SignUpRequestType } from "./types";
+import { useAuth } from "./contexts/AuthContext";
 
 export default function SignUpForm() {
+  const router = useRouter();
+  const { signUp } = useAuth();
   const {
     control,
     handleSubmit,
@@ -18,8 +21,9 @@ export default function SignUpForm() {
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = (data: SignUpRequestType) => {
-    console.log(data);
+  const onSubmit = async (data: SignUpRequestType) => {
+    await signUp(data);
+    router.replace("/");
   };
 
   return (
