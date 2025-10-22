@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import SignUpForm from "@/components/auth/SignUpForm";
 import { colors, spacing, typography } from "@/constants/theme";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignUp() {
   return (

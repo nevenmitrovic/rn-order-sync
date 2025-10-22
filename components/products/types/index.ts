@@ -9,3 +9,6 @@ export interface IProduct {
   availableQuantity: number;
   harvestDate: string;
 }
+export interface ProductImageProps {
+  imageUri?: string;
+}
