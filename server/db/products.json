@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Apples",
+    "category": "Fruits",
+    "pricePerKg": 2.5,
+    "unit": "kg",
+    "availableQuantity": 120,
+    "harvestDate": "2025-09-15"
+  },
+  {
+    "id": 2,
+    "name": "Eggs",
+    "category": "Dairy",
+    "pricePerDozen": 3.2,
+    "unit": "dozen",
+    "availableQuantity": 75,
+    "harvestDate": "2025-10-20"
+  },
+  {
+    "id": 3,
+    "name": "Fresh Tomatoes",
+    "category": "Vegetables",
+    "pricePerKg": 1.8,
+    "unit": "kg",
+    "availableQuantity": 200,
+    "harvestDate": "2025-10-10"
+  },
+  {
+    "id": 4,
+    "name": "Raw Honey",
+    "category": "Honey & Syrups",
+    "pricePerKg": 8.5,
+    "unit": "kg",
+    "availableQuantity": 45,
+    "harvestDate": "2025-08-28"
+  },
+  {
+    "id": 5,
+    "name": "Whole Milk",
+    "category": "Dairy",
+    "pricePerLiter": 1.4,
+    "unit": "liter",
+    "availableQuantity": 90,
+    "harvestDate": "2025-10-21"
+  },
+  {
+    "id": 6,
+    "name": "Chicken Breast",
+    "category": "Meat",
+    "pricePerKg": 6.0,
+    "unit": "kg",
+    "availableQuantity": 60,
+    "harvestDate": "2025-10-18"
+  },
+  {
+    "id": 7,
+    "name": "Potatoes",
+    "category": "Vegetables",
+    "pricePerKg": 1.0,
+    "unit": "kg",
+    "availableQuantity": 300,
+    "harvestDate": "2025-09-30"
+  },
+  {
+    "id": 8,
+    "name": "Wheat Flour",
+    "category": "Grains",
+    "pricePerKg": 1.2,
+    "unit": "kg",
+    "availableQuantity": 250,
+    "harvestDate": "2025-07-15"
+  },
+  {
+    "id": 9,
+    "name": "Strawberries",
+    "category": "Fruits",
+    "pricePerKg": 3.8,
+    "unit": "kg",
+    "availableQuantity": 80,
+    "harvestDate": "2025-06-25"
+  },
+  {
+    "id": 10,
+    "name": "Goat Cheese",
+    "category": "Dairy",
+    "pricePerKg": 10.5,
+    "unit": "kg",
+    "availableQuantity": 35,
+    "harvestDate": "2025-10-05"
+  }
+]
