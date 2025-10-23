@@ -11,7 +11,7 @@ import { useState } from "react";
 
 interface InputProps {
   placeholder: string;
-  label: string;
+  label?: string;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
   value: string | undefined;
@@ -33,7 +33,7 @@ export default function FormTextInput({
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={[
           styles.input,

@@ -74,6 +74,8 @@ export const CartContextProvider = ({ children }: any) => {
   };
   const handleRemoveAllItems = () => setCart([]);
   const getTotalPrice = () => {
+    if (cart.length === 0) return 0;
+
     return cart.reduce((acc: number, item: ICartItem) => {
       const unitPrice = getUnitPrice(item.item);
       return acc + item.quantity * unitPrice;

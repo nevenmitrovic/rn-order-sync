@@ -10,7 +10,13 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 import { IProduct } from "../types";
 import ProductImage from "./ProductImage";
-import { borderRadius, colors, spacing, typography } from "@/constants/theme";
+import {
+  borderRadius,
+  colors,
+  shadows,
+  spacing,
+  typography,
+} from "@/constants/theme";
 import { useCartContext } from "@/components/cart/contexts/CartContext";
 
 export default function ProductCard({ product }: { product: IProduct }) {
@@ -60,6 +66,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cardBackground,
     padding: spacing.sm,
     gap: spacing.lg,
+    elevation: shadows.medium.elevation,
+    shadowColor: shadows.medium.shadowColor,
+    shadowOffset: shadows.medium.shadowOffset,
+    shadowOpacity: shadows.medium.shadowOpacity,
+    shadowRadius: shadows.medium.shadowRadius,
   },
   productInfo: {
     gap: spacing.sm,

@@ -4,6 +4,7 @@ import { useCartContext } from "@/components/cart/contexts/CartContext";
 import { colors, spacing, typography } from "@/constants/theme";
 import CartCard from "@/components/cart/components/CartCard";
 import Animated, { LinearTransition } from "react-native-reanimated";
+import CartTotal from "@/components/cart/components/CartTotal";
 
 export default function CartScreen() {
   const { cart } = useCartContext();
@@ -21,6 +22,7 @@ export default function CartScreen() {
           You {`don't`} have any items in your cart.
         </Text>
       )}
+      ListFooterComponent={() => <CartTotal />}
     />
   );
 }
