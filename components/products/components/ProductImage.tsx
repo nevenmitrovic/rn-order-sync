@@ -11,7 +11,6 @@ export default function ProductImage({ imageUri, size }: ProductImageProps) {
   return (
     <View
       style={{
-        width: "100%",
         backgroundColor: colors.cardBackground,
         justifyContent: "center",
         alignItems: "center",

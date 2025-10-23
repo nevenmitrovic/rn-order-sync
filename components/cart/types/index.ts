@@ -13,3 +13,9 @@ export interface ICartItem {
   item: IProduct;
   quantity: number;
 }
+
+export interface ICartCardButton {
+  onPressDecrease: () => void;
+  onPressIncrease: () => void;
+  quantity: number;
+}
