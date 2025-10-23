@@ -11,4 +11,5 @@ export interface IProduct {
 }
 export interface ProductImageProps {
   imageUri?: string;
+  size?: number;
 }

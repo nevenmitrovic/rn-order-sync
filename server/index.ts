@@ -246,7 +246,6 @@ app.get(
   authenticateToken,
   (req: AuthenticatedRequest, res: Response): void => {
     const products = loadProducts();
-    console.log(products);
     res.json(products);
   },
 );
