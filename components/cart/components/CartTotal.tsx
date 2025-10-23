@@ -13,7 +13,7 @@ import Divider from "@/components/common/Divider";
 import MainButton from "@/components/common/MainButton";
 
 export default function CartTotal() {
-  const { getTotalPrice } = useCartContext();
+  const { getTotalPrice, handleRemoveAllItems } = useCartContext();
 
   const totalPrice = Number(getTotalPrice());
 
@@ -42,7 +42,10 @@ export default function CartTotal() {
           ${(totalPrice - (totalPrice * 11) / 100).toFixed(2)}
         </Text>
       </View>
-      <MainButton buttonText="Checkout" onPress={() => {}} />
+      <View style={styles.fieldContainer}>
+        <MainButton buttonText="Checkout" onPress={() => {}} />
+        <MainButton buttonText="Clear cart" onPress={handleRemoveAllItems} />
+      </View>
     </View>
   );
 }

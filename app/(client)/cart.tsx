@@ -7,7 +7,9 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 import CartTotal from "@/components/cart/components/CartTotal";
 
 export default function CartScreen() {
-  const { cart } = useCartContext();
+  const { cart, getTotalItems } = useCartContext();
+
+  const totalItems = Number(getTotalItems());
 
   return (
     <Animated.FlatList
@@ -22,7 +24,7 @@ export default function CartScreen() {
           You {`don't`} have any items in your cart.
         </Text>
       )}
-      ListFooterComponent={() => <CartTotal />}
+      ListFooterComponent={() => (totalItems === 0 ? undefined : <CartTotal />)}
     />
   );
 }
