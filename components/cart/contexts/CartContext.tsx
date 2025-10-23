@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, use, useState } from "react";
 
 import { ICartContext, ICartItem } from "../types";
 import { IProduct } from "@/components/products/types";
@@ -96,3 +96,13 @@ export const CartContextProvider = ({ children }: any) => {
     </CartContext.Provider>
   );
 };
+
+export function useCartContext() {
+  const context = use(CartContext);
+  if (!context) {
+    throw new Error(
+      "Error! CartContext called from outside the CartContextProvider",
+    );
+  }
+  return context;
+}

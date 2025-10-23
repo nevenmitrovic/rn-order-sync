@@ -6,8 +6,16 @@ import Feather from "@expo/vector-icons/Feather";
 import { StatusBar } from "expo-status-bar";
 
 import { colors } from "@/constants/theme";
+import {
+  CartContextProvider,
+  useCartContext,
+} from "@/components/cart/contexts/CartContext";
 
-export default function Layout() {
+function Layout() {
+  const { getTotalItems } = useCartContext();
+
+  const totalItems = Number(getTotalItems());
+
   return (
     <React.Fragment>
       <StatusBar style="dark" />
@@ -34,6 +42,7 @@ export default function Layout() {
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="shopping-cart" size={size} color={color} />
             ),
+            tabBarBadge: totalItems > 0 ? totalItems : undefined,
           }}
         />
         <Tabs.Screen
@@ -47,5 +56,13 @@ export default function Layout() {
         />
       </Tabs>
     </React.Fragment>
+  );
+}
+
+export default function ClientLayout() {
+  return (
+    <CartContextProvider>
+      <Layout />
+    </CartContextProvider>
   );
 }

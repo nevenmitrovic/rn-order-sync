@@ -7,11 +7,14 @@ import { borderRadius, colors, spacing, typography } from "@/constants/theme";
 import { useGetProductById } from "@/components/products/hooks/useGetProductById";
 import ProductImage from "@/components/products/components/ProductImage";
 import MainButton from "@/components/common/MainButton";
+import { useCartContext } from "@/components/cart/contexts/CartContext";
+import { IProduct } from "@/components/products/types";
 
 export default function ProductDetailsScreen() {
   const { productId } = useLocalSearchParams();
   const { product, isFetchingProduct } = useGetProductById(productId as string);
   const navigation = useNavigation();
+  const { handleAddCartItem } = useCartContext();
 
   const daysDifference = product?.harvestDate
     ? differenceInDays(new Date(), parseISO(product.harvestDate))
@@ -70,7 +73,10 @@ export default function ProductDetailsScreen() {
             : daysDifference + " day ago"}
         </Text>
       </View>
-      <MainButton buttonText="Add to cart" onPress={() => {}} />
+      <MainButton
+        buttonText="Add to cart"
+        onPress={() => handleAddCartItem(product as IProduct)}
+      />
     </View>
   );
 }
