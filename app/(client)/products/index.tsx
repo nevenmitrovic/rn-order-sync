@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   emptyComponent: {
     textAlign: "center",
-    fontSize: typography.fontSizes.xxl,
+    fontSize: typography.fontSizes.xl,
     color: colors.colorForeground,
   },
   columnWrapper: {

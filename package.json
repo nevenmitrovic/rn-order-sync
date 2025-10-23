@@ -34,6 +34,7 @@
     "react-hook-form": "^7.65.0",
     "react-native": "0.81.4",
     "react-native-react-query-devtools": "^1.5.1",
+    "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "toastify-react-native": "^7.2.3",

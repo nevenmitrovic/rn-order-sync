@@ -11,8 +11,11 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { IProduct } from "../types";
 import ProductImage from "./ProductImage";
 import { borderRadius, colors, spacing, typography } from "@/constants/theme";
+import { useCartContext } from "@/components/cart/contexts/CartContext";
 
 export default function ProductCard({ product }: { product: IProduct }) {
+  const { handleAddCartItem } = useCartContext();
+
   return (
     <Link href={`/products/${product.id}`} asChild>
       <Pressable style={styles.container}>
@@ -30,7 +33,10 @@ export default function ProductCard({ product }: { product: IProduct }) {
               product.pricePerKg ||
               product.pricePerLiter}
           </Text>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => handleAddCartItem(product)}
+          >
             <View style={styles.basketButton}>
               <FontAwesome6
                 name="basket-shopping"
