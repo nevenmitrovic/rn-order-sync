@@ -79,6 +79,7 @@ export const CartContextProvider = ({ children }: any) => {
       return acc + item.quantity * unitPrice;
     }, 0);
   };
+  const getTotalItems = () => cart.length;
 
   return (
     <CartContext.Provider
@@ -88,6 +89,7 @@ export const CartContextProvider = ({ children }: any) => {
         handleDecreaseItemQuantity,
         handleRemoveAllItems,
         getTotalPrice,
+        getTotalItems,
       }}
     >
       {children}

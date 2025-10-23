@@ -6,6 +6,7 @@ export interface ICartContext {
   handleDecreaseItemQuantity: (id: number) => void;
   handleRemoveAllItems: () => void;
   getTotalPrice: () => void;
+  getTotalItems: () => void;
 }
 
 export interface ICartItem {
