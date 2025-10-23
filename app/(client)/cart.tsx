@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { useCartContext } from "@/components/cart/contexts/CartContext";
 import { colors, spacing } from "@/constants/theme";

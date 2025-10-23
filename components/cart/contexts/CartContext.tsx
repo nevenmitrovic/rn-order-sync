@@ -52,7 +52,7 @@ export const CartContextProvider = ({ children }: any) => {
 
       if (currentItem) {
         if (currentItem.quantity === 1) {
-          return prevCart.filter((item) => item.item.id === id);
+          return prevCart.filter((item) => item.item.id !== id);
         }
 
         return prevCart.map((item) => {
