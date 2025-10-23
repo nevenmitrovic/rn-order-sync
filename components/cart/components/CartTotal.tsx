@@ -1,3 +1,5 @@
+import { StyleSheet, Text, View } from "react-native";
+
 import FormTextInput from "@/components/common/FormTextInput";
 import {
   borderRadius,
@@ -6,9 +8,9 @@ import {
   spacing,
   typography,
 } from "@/constants/theme";
-import { StyleSheet, Text, View } from "react-native";
 import { useCartContext } from "../contexts/CartContext";
 import Divider from "@/components/common/Divider";
+import MainButton from "@/components/common/MainButton";
 
 export default function CartTotal() {
   const { getTotalPrice } = useCartContext();
@@ -25,7 +27,7 @@ export default function CartTotal() {
       />
       <View style={styles.fieldContainer}>
         <Text style={[styles.text, { fontWeight: "bold" }]}>Sub total:</Text>
-        <Text style={styles.text}>${totalPrice}</Text>
+        <Text style={styles.text}>${totalPrice.toFixed(2)}</Text>
       </View>
       <View style={styles.fieldContainer}>
         <Text style={[styles.text, { fontWeight: "bold" }]}>Discount: </Text>
@@ -40,6 +42,7 @@ export default function CartTotal() {
           ${(totalPrice - (totalPrice * 11) / 100).toFixed(2)}
         </Text>
       </View>
+      <MainButton buttonText="Checkout" onPress={() => {}} />
     </View>
   );
 }
