@@ -42,12 +42,24 @@ export default function ProductCard({ product }: { product: IProduct }) {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => handleAddCartItem(product)}
+            disabled={product.availableQuantity < 1}
           >
-            <View style={styles.basketButton}>
+            <View
+              style={[
+                styles.basketButton,
+                product.availableQuantity < 1
+                  ? styles.basketButtonDisabled
+                  : undefined,
+              ]}
+            >
               <FontAwesome6
                 name="basket-shopping"
                 size={20}
-                color={colors.success}
+                color={
+                  product.availableQuantity < 1
+                    ? colors.disabled
+                    : colors.success
+                }
               />
             </View>
           </TouchableOpacity>
@@ -94,6 +106,9 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.round,
     backgroundColor: colors.success + "40",
     padding: spacing.sm,
+  },
+  basketButtonDisabled: {
+    backgroundColor: colors.disabled + "40",
   },
   price: {
     fontSize: typography.fontSizes.xl,

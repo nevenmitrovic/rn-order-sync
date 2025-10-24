@@ -5,7 +5,7 @@
     "category": "Fruits",
     "pricePerKg": 2.5,
     "unit": "kg",
-    "availableQuantity": 120,
+    "availableQuantity": 0,
     "harvestDate": "2025-09-15"
   },
   {
