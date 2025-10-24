@@ -24,6 +24,25 @@ interface Product {
   harvestDate: string;
 }
 
+interface OrderItem {
+  productId: number;
+  quantity: number;
+}
+
+interface Order {
+  id: number;
+  userId: number;
+  items: OrderItem[];
+  totalAmount: number;
+  status: "pending" | "confirmed" | "cancelled";
+  orderDate: string;
+}
+
+interface OrderRequest {
+  items: OrderItem[];
+  totalAmount: number;
+}
+
 interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -101,6 +120,35 @@ const saveProducts = (products: Product[]): void => {
     fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
   } catch (error) {
     console.error("Error saving products:", error);
+  }
+};
+
+// Load orders from JSON file
+const loadOrders = (): Order[] => {
+  try {
+    const ordersPath = path.join(__dirname, "db/orders.json");
+
+    // Check if file exists
+    if (!fs.existsSync(ordersPath)) {
+      console.error(`Orders file not found at: ${ordersPath}`);
+      return [];
+    }
+
+    const ordersData = fs.readFileSync(ordersPath, "utf8");
+    return JSON.parse(ordersData);
+  } catch (error) {
+    console.error("Error loading orders:", error);
+    return [];
+  }
+};
+
+// Save orders to JSON file
+const saveOrders = (orders: Order[]): void => {
+  try {
+    const ordersPath = path.join(__dirname, "db/orders.json");
+    fs.writeFileSync(ordersPath, JSON.stringify(orders, null, 2));
+  } catch (error) {
+    console.error("Error saving orders:", error);
   }
 };
 
@@ -341,6 +389,86 @@ app.post(
     saveProducts(products);
 
     res.status(201).json(newProduct);
+  },
+);
+
+// Post order
+app.post(
+  "/api/order",
+  authenticateToken,
+  (req: Request<{}, {}, OrderRequest>, res: Response): void => {
+    const { items, totalAmount } = req.body;
+    const userId = (req as AuthenticatedRequest).user?.id;
+
+    if (!userId) {
+      res.status(401).json({ error: "User authentication required" });
+      return;
+    }
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      res.status(400).json({ error: "Order items are required" });
+      return;
+    }
+
+    // Validate order items
+    for (const item of items) {
+      if (!item.productId || !item.quantity || item.quantity <= 0) {
+        res.status(400).json({
+          error: "Each item must have a valid productId and positive quantity",
+        });
+        return;
+      }
+    }
+
+    const products = loadProducts();
+    const orders = loadOrders();
+
+    // Validate products exist
+    for (const item of items) {
+      const product = products.find((p) => p.id === item.productId);
+
+      if (!product) {
+        res.status(404).json({
+          error: `Product with ID ${item.productId} not found`,
+        });
+        return;
+      }
+
+      if (product.availableQuantity < item.quantity) {
+        res.status(400).json({
+          error: `Insufficient quantity for product ${product.name}. Available: ${product.availableQuantity}, Requested: ${item.quantity}`,
+        });
+        return;
+      }
+    }
+
+    // Create new order
+    const newOrder: Order = {
+      id: orders.length > 0 ? Math.max(...orders.map((o) => o.id)) + 1 : 1,
+      userId,
+      items,
+      totalAmount,
+      status: "pending",
+      orderDate: new Date().toISOString(),
+    };
+
+    // Update product quantities
+    for (const item of items) {
+      const productIndex = products.findIndex((p) => p.id === item.productId);
+      if (productIndex !== -1) {
+        products[productIndex].availableQuantity -= item.quantity;
+      }
+    }
+
+    // Save order and updated products
+    orders.push(newOrder);
+    saveOrders(orders);
+    saveProducts(products);
+
+    res.status(201).json({
+      message: "Order created successfully",
+      order: newOrder,
+    });
   },
 );
 
