@@ -14,7 +14,7 @@
     "category": "Dairy",
     "pricePerDozen": 3.2,
     "unit": "dozen",
-    "availableQuantity": 75,
+    "availableQuantity": 74,
     "harvestDate": "2025-10-20"
   },
   {
@@ -23,7 +23,7 @@
     "category": "Vegetables",
     "pricePerKg": 1.8,
     "unit": "kg",
-    "availableQuantity": 200,
+    "availableQuantity": 198,
     "harvestDate": "2025-10-10"
   },
   {
@@ -32,7 +32,7 @@
     "category": "Honey & Syrups",
     "pricePerKg": 8.5,
     "unit": "kg",
-    "availableQuantity": 45,
+    "availableQuantity": 42,
     "harvestDate": "2025-08-28"
   },
   {
@@ -48,7 +48,7 @@
     "id": 6,
     "name": "Chicken Breast",
     "category": "Meat",
-    "pricePerKg": 6.0,
+    "pricePerKg": 6,
     "unit": "kg",
     "availableQuantity": 60,
     "harvestDate": "2025-10-18"
@@ -57,7 +57,7 @@
     "id": 7,
     "name": "Potatoes",
     "category": "Vegetables",
-    "pricePerKg": 1.0,
+    "pricePerKg": 1,
     "unit": "kg",
     "availableQuantity": 300,
     "harvestDate": "2025-09-30"

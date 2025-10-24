@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "userId": 3,
+    "items": [
+      {
+        "productId": 2,
+        "name": "Eggs",
+        "unit": "dozen",
+        "quantity": 1
+      },
+      {
+        "productId": 3,
+        "name": "Fresh Tomatoes",
+        "unit": "kg",
+        "quantity": 1
+      },
+      {
+        "productId": 4,
+        "name": "Raw Honey",
+        "unit": "kg",
+        "quantity": 2
+      }
+    ],
+    "totalAmount": 22,
+    "status": "pending",
+    "orderDate": "2025-10-24T09:35:47.122Z"
+  },
+  {
+    "id": 2,
+    "userId": 3,
+    "items": [
+      {
+        "productId": 3,
+        "name": "Fresh Tomatoes",
+        "unit": "kg",
+        "quantity": 1
+      },
+      {
+        "productId": 4,
+        "name": "Raw Honey",
+        "unit": "kg",
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 10.3,
+    "status": "pending",
+    "orderDate": "2025-10-24T09:37:50.995Z"
+  }
+]
