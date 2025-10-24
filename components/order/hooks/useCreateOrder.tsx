@@ -1,0 +1,22 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Toast } from "toastify-react-native";
+
+import { createOrder } from "../services";
+import { IOrderRequest } from "../types";
+import { queryKeys } from "@/react-query/queryKeys";
+
+export function useCreateOrder() {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (order: IOrderRequest) => createOrder(order),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKeys.orders] });
+      Toast.success(
+        "You’ve successfully sent your order request! Please come back later and check your order in the Orders tab!",
+      );
+    },
+  });
+
+  return { mutate };
+}

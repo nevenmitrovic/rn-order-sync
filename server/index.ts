@@ -26,7 +26,9 @@ interface Product {
 
 interface OrderItem {
   productId: number;
+  name: string;
   quantity: number;
+  unit: "liter" | "kg" | "dozen";
 }
 
 interface Order {
@@ -442,7 +444,6 @@ app.post(
       }
     }
 
-    // Create new order
     const newOrder: Order = {
       id: orders.length > 0 ? Math.max(...orders.map((o) => o.id)) + 1 : 1,
       userId,
