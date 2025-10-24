@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1092229766891",
+    "project_id": "order-sync-app-7c258",
+    "storage_bucket": "order-sync-app-7c258.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092229766891:android:6b61b0e5737d2d456068ae",
+        "android_client_info": {
+          "package_name": "com.nevenub.rnordersync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCG6yvHw9EPI31enS1vqu6SQ5tqQI1lc9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

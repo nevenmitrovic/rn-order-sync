@@ -1,14 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import type { ExpoPushToken } from "expo-notifications";
 
 import Constants from "expo-constants";
 
 import { Alert, Platform } from "react-native";
+import axiosInstance from "@/axios/axiosInstance";
+import { AxiosResponse } from "axios";
 
 export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
   notification?: Notifications.Notification;
+  saveNotificationToken: () => Promise<AxiosResponse<any, any, {}> | undefined>;
 }
 
 export const usePushNotifications = (): PushNotificationState => {
@@ -75,6 +79,26 @@ export const usePushNotifications = (): PushNotificationState => {
     return token;
   }
 
+  const saveNotificationToken = useCallback(async () => {
+    if (!expoPushToken?.data) {
+      console.warn("No push token available to save");
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.post("/api/save-token", {
+        token: expoPushToken.data,
+      });
+      return res;
+    } catch (error) {
+      console.error(error);
+      Alert.alert(
+        "Server error",
+        "Failed to save push notification token. Please try again.",
+      );
+    }
+  }, [expoPushToken]);
+
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
@@ -96,8 +120,11 @@ export const usePushNotifications = (): PushNotificationState => {
     };
   }, []);
 
+  console.log(`expo: ${expoPushToken?.data}`, `notification: ${notification}`);
+
   return {
     expoPushToken,
     notification,
+    saveNotificationToken,
   };
 };

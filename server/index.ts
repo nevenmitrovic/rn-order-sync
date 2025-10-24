@@ -3,8 +3,9 @@ import jwt from "jsonwebtoken";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
+import { Expo } from "expo-server-sdk";
 
-interface User {
+export interface User {
   id: number;
   email: string;
   password: string;
@@ -12,7 +13,7 @@ interface User {
   address: string;
   role: "admin" | "user";
 }
-interface Product {
+export interface Product {
   id: number;
   name: string;
   category: string;
@@ -24,14 +25,14 @@ interface Product {
   harvestDate: string;
 }
 
-interface OrderItem {
+export interface OrderItem {
   productId: number;
   name: string;
   quantity: number;
   unit: "liter" | "kg" | "dozen";
 }
 
-interface Order {
+export interface Order {
   id: number;
   userId: number;
   items: OrderItem[];
@@ -40,37 +41,103 @@ interface Order {
   orderDate: string;
 }
 
-interface OrderRequest {
+export interface OrderRequest {
   items: OrderItem[];
   totalAmount: number;
 }
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
     email: string;
     role: string;
   };
 }
-interface LoginRequest {
+export interface LoginRequest {
   email: string;
   password: string;
 }
-interface RegisterRequest {
+export interface RegisterRequest {
   email: string;
   password: string;
   name: string;
   address: string;
 }
+export interface UserToken {
+  userId: number;
+  pushToken: string;
+}
 
+const SECRET_KEY: string = "your-secret-key";
 const app = express();
+export const expo = new Expo();
 app.use(express.json());
 app.use(cors());
 
-const SECRET_KEY: string = "your-secret-key";
+export const sendAdminNotification = async (order: Order): Promise<void> => {
+  try {
+    const users = loadUsers();
+    const tokens = loadTokens();
+
+    // Find all admin users
+    const adminUsers = users.filter((user) => user.role === "admin");
+
+    for (const admin of adminUsers) {
+      // Find admin's push token
+      const adminToken = tokens.find((token) => token.userId === admin.id);
+
+      if (adminToken && Expo.isExpoPushToken(adminToken.pushToken)) {
+        const message = {
+          to: adminToken.pushToken,
+          sound: "default" as const,
+          title: "Nova narudžbina",
+          body: `Kreirana je nova narudžbina #${order.id} u vrednosti od ${order.totalAmount} RSD`,
+          data: {
+            orderId: order.id,
+            type: "new_order",
+          },
+        };
+
+        await expo.sendPushNotificationsAsync([message]);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending admin notification:", error);
+    // Ne prekidamo izvršavanje ako notifikacija ne uspe
+  }
+};
+
+// Load tokens from JSON file
+export const loadTokens = (): UserToken[] => {
+  try {
+    const tokensPath = path.join(__dirname, "db/tokens.json");
+
+    // Check if file exists
+    if (!fs.existsSync(tokensPath)) {
+      console.error(`Tokens file not found at: ${tokensPath}`);
+      return [];
+    }
+
+    const tokensData = fs.readFileSync(tokensPath, "utf8");
+    return JSON.parse(tokensData);
+  } catch (error) {
+    console.error("Error loading tokens:", error);
+    return [];
+  }
+};
+
+// Save tokens to JSON file
+export const saveTokens = (tokens: UserToken[]): void => {
+  try {
+    const tokensPath = path.join(__dirname, "db/tokens.json");
+    fs.writeFileSync(tokensPath, JSON.stringify(tokens, null, 2));
+  } catch (error) {
+    console.error("Error saving tokens:", error);
+  }
+};
 
 // Load users from JSON file
-const loadUsers = (): User[] => {
+export const loadUsers = (): User[] => {
   try {
     const usersPath = path.join(__dirname, "db/users.json");
 
@@ -88,7 +155,7 @@ const loadUsers = (): User[] => {
   }
 };
 // Save users to JSON file
-const saveUsers = (users: User[]): void => {
+export const saveUsers = (users: User[]): void => {
   try {
     const usersPath = path.join(__dirname, "db/users.json");
     fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
@@ -97,7 +164,7 @@ const saveUsers = (users: User[]): void => {
   }
 };
 // Load products from JSON file
-const loadProducts = (): Product[] => {
+export const loadProducts = (): Product[] => {
   try {
     const productsPath = path.join(__dirname, "db/products.json");
 
@@ -116,7 +183,7 @@ const loadProducts = (): Product[] => {
 };
 
 // Save products to JSON file
-const saveProducts = (products: Product[]): void => {
+export const saveProducts = (products: Product[]): void => {
   try {
     const productsPath = path.join(__dirname, "db/products.json");
     fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
@@ -126,7 +193,7 @@ const saveProducts = (products: Product[]): void => {
 };
 
 // Load orders from JSON file
-const loadOrders = (): Order[] => {
+export const loadOrders = (): Order[] => {
   try {
     const ordersPath = path.join(__dirname, "db/orders.json");
 
@@ -145,7 +212,7 @@ const loadOrders = (): Order[] => {
 };
 
 // Save orders to JSON file
-const saveOrders = (orders: Order[]): void => {
+export const saveOrders = (orders: Order[]): void => {
   try {
     const ordersPath = path.join(__dirname, "db/orders.json");
     fs.writeFileSync(ordersPath, JSON.stringify(orders, null, 2));
@@ -160,7 +227,10 @@ const authenticateToken = (
   res: Response,
   next: NextFunction,
 ): void => {
-  const authHeader = req.headers["authorization"];
+  const authHeader =
+    (req.headers["authorization"] as string) ||
+    (req.headers.authorization as string);
+  console.log(authHeader);
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
@@ -177,6 +247,88 @@ const authenticateToken = (
     next();
   });
 };
+
+// expo push notifications
+app.post(
+  "/api/push-notification",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { token, title, body, metadata } = req.body;
+    if (!Expo.isExpoPushToken(token)) {
+      throw new Error("Invalid push token");
+    }
+
+    const message = {
+      to: token,
+      sound: "default",
+      title: title,
+      body: body,
+      data: metadata || {},
+    };
+
+    const tickets = await expo.sendPushNotificationsAsync([message]);
+
+    return res.status(200).json(tickets);
+  },
+);
+
+// save expo token
+app.post(
+  "/api/save-token",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { token } = req.body;
+    const userId = req.user?.id;
+
+    if (!token) {
+      res.status(400).json({ error: "Token is required" });
+      return;
+    }
+
+    if (!userId) {
+      res.status(401).json({ error: "User authentication required" });
+      return;
+    }
+
+    // Validate if it's a valid Expo push token
+    if (!Expo.isExpoPushToken(token)) {
+      res.status(400).json({ error: "Invalid Expo push token" });
+      return;
+    }
+
+    try {
+      const tokens = loadTokens();
+
+      // Check if user already has a token
+      const existingTokenIndex = tokens.findIndex((t) => t.userId === userId);
+
+      if (existingTokenIndex !== -1) {
+        // Update existing token
+        tokens[existingTokenIndex] = {
+          userId,
+          pushToken: token,
+        };
+      } else {
+        // Create new token entry
+        const newToken: UserToken = {
+          userId,
+          pushToken: token,
+        };
+        tokens.push(newToken);
+      }
+
+      saveTokens(tokens);
+
+      res.status(200).json({
+        message: "Push token saved successfully",
+        token: token,
+      });
+    } catch (error) {
+      console.error("Error saving push token:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+);
 
 // Login endpoint
 app.post(
@@ -398,7 +550,7 @@ app.post(
 app.post(
   "/api/order",
   authenticateToken,
-  (req: Request<{}, {}, OrderRequest>, res: Response): void => {
+  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { items, totalAmount } = req.body;
     const userId = (req as AuthenticatedRequest).user?.id;
 
@@ -465,6 +617,7 @@ app.post(
     orders.push(newOrder);
     saveOrders(orders);
     saveProducts(products);
+    await sendAdminNotification(newOrder);
 
     res.status(201).json({
       message: "Order created successfully",

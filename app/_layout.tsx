@@ -7,13 +7,16 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useEffect } from "react";
 
 import { queryClient } from "@/react-query/queryClient";
 import { colors } from "@/constants/theme";
 import { AuthProvider, useAuth } from "@/components/auth/contexts/AuthContext";
+import { usePushNotifications } from "@/hooks/usePushNotification";
 
 function Layout() {
   const { isAdmin, isLogged } = useAuth();
+  const { saveNotificationToken } = usePushNotifications();
   const onCopy = async (text: string) => {
     try {
       // For Expo:
@@ -25,6 +28,12 @@ function Layout() {
       return false;
     }
   };
+
+  useEffect(() => {
+    if (isLogged) {
+      saveNotificationToken();
+    }
+  }, [saveNotificationToken, isLogged]);
 
   return (
     <QueryClientProvider client={queryClient}>

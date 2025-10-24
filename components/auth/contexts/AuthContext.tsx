@@ -1,5 +1,6 @@
 import { createContext, use, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 
 import type {
   IAuthContext,
@@ -14,6 +15,7 @@ const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<Omit<IUser, "password"> | undefined>();
+  const router = useRouter();
 
   useEffect(() => {
     const getUserFromStorage = async () => {
@@ -34,8 +36,10 @@ export const AuthProvider = ({ children }: any) => {
   const handleSignIn = async ({ email, password }: SignInRequestType) => {
     try {
       const user = await signIn({ email, password });
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
+      if (user) {
+        await AsyncStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -45,6 +49,7 @@ export const AuthProvider = ({ children }: any) => {
       await deleteAuthToken();
       await AsyncStorage.removeItem("user");
       setUser(undefined);
+      router.replace("/");
     } catch (error) {
       console.error(error);
     }
@@ -57,8 +62,10 @@ export const AuthProvider = ({ children }: any) => {
   }: SignUpRequestType) => {
     try {
       const user = await signUp({ email, password, name, address });
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
+      if (user) {
+        await AsyncStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+      }
     } catch (error) {
       console.log(error);
     }
