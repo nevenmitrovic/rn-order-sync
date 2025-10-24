@@ -46,5 +46,20 @@
     "totalAmount": 10.3,
     "status": "pending",
     "orderDate": "2025-10-24T09:37:50.995Z"
+  },
+  {
+    "id": 3,
+    "userId": 2,
+    "items": [
+      {
+        "productId": 2,
+        "name": "Eggs",
+        "unit": "dozen",
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 3.2,
+    "status": "pending",
+    "orderDate": "2025-10-24T20:33:30.811Z"
   }
 ]

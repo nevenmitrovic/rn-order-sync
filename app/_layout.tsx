@@ -16,7 +16,7 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 
 function Layout() {
   const { isAdmin, isLogged } = useAuth();
-  const { saveNotificationToken } = usePushNotifications();
+  const { saveNotificationToken, expoPushToken } = usePushNotifications();
   const onCopy = async (text: string) => {
     try {
       // For Expo:
@@ -30,10 +30,10 @@ function Layout() {
   };
 
   useEffect(() => {
-    if (isLogged) {
+    if (isLogged && expoPushToken) {
       saveNotificationToken();
     }
-  }, [saveNotificationToken, isLogged]);
+  }, [saveNotificationToken, isLogged, expoPushToken]);
 
   return (
     <QueryClientProvider client={queryClient}>

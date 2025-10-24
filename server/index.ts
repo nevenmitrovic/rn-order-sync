@@ -355,6 +355,8 @@ app.post(
       SECRET_KEY,
     );
 
+    console.log("Zasto network error");
+
     res.json({
       token,
       user: {
@@ -627,10 +629,10 @@ app.post(
 );
 
 console.log("Starting server...");
-app.listen(3001, (error?: Error): void => {
+app.listen(3001, "192.168.1.7", (error?: Error): void => {
   if (error) {
     console.error("Error starting server:", error);
     process.exit(1);
   }
-  console.log("Mock API server running on http://localhost:3001");
+  console.log("Mock API server running on http://192.168.1.7:3001");
 });

@@ -37,9 +37,9 @@ export async function signIn({
         Toast.error("Authentication service not found");
       } else if (error.response?.status === 500) {
         Toast.error("Server error. Please try again later");
-      } else if (error.response?.data?.message) {
+      } else if (error.message) {
         // Use server-provided error message if available
-        Toast.error(error.response.data.message);
+        Toast.error(error.message);
       } else {
         Toast.error("Login failed. Please check your connection");
       }

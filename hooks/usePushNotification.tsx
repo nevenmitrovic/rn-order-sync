@@ -86,7 +86,7 @@ export const usePushNotifications = (): PushNotificationState => {
     }
 
     try {
-      const res = await axiosInstance.post("/api/save-token", {
+      const res = await axiosInstance.post("/save-token", {
         token: expoPushToken.data,
       });
       return res;

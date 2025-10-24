@@ -7,19 +7,15 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "GOOGLE_SERVICES_JSON": "./android/app/google-services.json"
+        "EXPO_PUBLIC_API_BASE_URL": "./env"
       }
     },
     "preview": {
       "distribution": "internal",
-      "env": {
-        "GOOGLE_SERVICES_JSON": "./android/app/google-services.json"
-      }
+      "env": {}
     },
     "production": {
-      "env": {
-        "GOOGLE_SERVICES_JSON": "./android/app/google-services.json"
-      }
+      "env": {}
     }
   }
 }

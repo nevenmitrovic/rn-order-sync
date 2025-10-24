@@ -4,14 +4,17 @@ import { Platform } from "react-native";
 import { getAuthToken } from "@/components/auth/utils";
 
 // Android emulator uses 10.0.2.2 to access localhost
-const getBaseURL = () => {
-  if (Platform.OS === "android") {
-    return "http://10.0.2.2:3001/" + process.env.EXPO_PUBLIC_API_BASE_URL;
-  }
-  return "http://localhost:3001/" + process.env.EXPO_PUBLIC_API_BASE_URL;
-};
+// const getBaseURL = () => {
+//   if (Platform.OS === "android") {
+//     // For Android emulator, replace localhost/IP with 10.0.2.2
+//     return "http://10.0.2.2:3001/api";
+//   }
+//   // For iOS simulator and web, use the environment variable or fallback
+//   return process.env.EXPO_PUBLIC_API_BASE_URL;
+// };
 
-const BASE_URL = getBaseURL();
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+console.log("Base URL:", BASE_URL);
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
