@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
-
+import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 
 import { colors } from "@/constants/theme";
@@ -11,11 +11,37 @@ import {
   CartContextProvider,
   useCartContext,
 } from "@/components/cart/contexts/CartContext";
+import { useAuth } from "@/components/auth/contexts/AuthContext";
 
 function Layout() {
   const { getTotalItems } = useCartContext();
+  const { user } = useAuth();
 
   const totalItems = Number(getTotalItems());
+
+  useEffect(() => {
+    const handleDailyNotification = async () => {
+      const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+      const alreadyScheduled = scheduled.some((n) => n.identifier === "daily");
+
+      if (!alreadyScheduled) {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Happy new hour!",
+            body: "Visit our App and get a discount!",
+            color: colors.colorAccent,
+          },
+          trigger: {
+            hour: 20,
+            minute: 25,
+            type: Notifications.SchedulableTriggerInputTypes.DAILY,
+          },
+          identifier: "daily",
+        });
+      }
+    };
+    handleDailyNotification();
+  }, [user?.role]);
 
   return (
     <React.Fragment>
