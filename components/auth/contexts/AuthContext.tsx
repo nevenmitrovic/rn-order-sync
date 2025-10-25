@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: any) => {
       await deleteAuthToken();
       await AsyncStorage.removeItem("user");
       setUser(undefined);
-      router.replace("/");
+      router.replace("/signin");
     } catch (error) {
       console.error(error);
     }
