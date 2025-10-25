@@ -86,19 +86,25 @@ export const sendAdminNotification = async (order: Order): Promise<void> => {
       // Find admin's push token
       const adminToken = tokens.find((token) => token.userId === admin.id);
 
-      if (adminToken && Expo.isExpoPushToken(adminToken.pushToken)) {
+      if (adminToken?.pushToken) {
         const message = {
           to: adminToken.pushToken,
           sound: "default" as const,
           title: "Nova narudžbina",
-          body: `Kreirana je nova narudžbina #${order.id} u vrednosti od ${order.totalAmount} RSD`,
+          body: `Kreirana je nova narudžbina #${order.id} u vrednosti od $${order.totalAmount}`,
           data: {
             orderId: order.id,
             type: "new_order",
           },
+          android: {
+            channelId: "default",
+          },
         };
 
-        await expo.sendPushNotificationsAsync([message]);
+        const messageResponse = await expo.sendPushNotificationsAsync([
+          message,
+        ]);
+        console.log("Message Response:", messageResponse);
       }
     }
   } catch (error) {
@@ -230,7 +236,6 @@ const authenticateToken = (
   const authHeader =
     (req.headers["authorization"] as string) ||
     (req.headers.authorization as string);
-  console.log(authHeader);
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
@@ -354,8 +359,6 @@ app.post(
       { id: user.id, email: user.email, role: user.role },
       SECRET_KEY,
     );
-
-    console.log("Zasto network error");
 
     res.json({
       token,

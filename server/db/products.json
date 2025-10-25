@@ -14,7 +14,7 @@
     "category": "Dairy",
     "pricePerDozen": 3.2,
     "unit": "dozen",
-    "availableQuantity": 73,
+    "availableQuantity": 69,
     "harvestDate": "2025-10-20"
   },
   {
@@ -23,7 +23,7 @@
     "category": "Vegetables",
     "pricePerKg": 1.8,
     "unit": "kg",
-    "availableQuantity": 198,
+    "availableQuantity": 195,
     "harvestDate": "2025-10-10"
   },
   {
@@ -32,7 +32,7 @@
     "category": "Honey & Syrups",
     "pricePerKg": 8.5,
     "unit": "kg",
-    "availableQuantity": 42,
+    "availableQuantity": 39,
     "harvestDate": "2025-08-28"
   },
   {
@@ -50,7 +50,7 @@
     "category": "Meat",
     "pricePerKg": 6,
     "unit": "kg",
-    "availableQuantity": 60,
+    "availableQuantity": 50,
     "harvestDate": "2025-10-18"
   },
   {
@@ -68,7 +68,7 @@
     "category": "Grains",
     "pricePerKg": 1.2,
     "unit": "kg",
-    "availableQuantity": 250,
+    "availableQuantity": 249,
     "harvestDate": "2025-07-15"
   },
   {
