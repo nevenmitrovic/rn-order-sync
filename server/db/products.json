@@ -14,7 +14,7 @@
     "category": "Dairy",
     "pricePerDozen": 3.2,
     "unit": "dozen",
-    "availableQuantity": 69,
+    "availableQuantity": 67,
     "harvestDate": "2025-10-20"
   },
   {
@@ -23,7 +23,7 @@
     "category": "Vegetables",
     "pricePerKg": 1.8,
     "unit": "kg",
-    "availableQuantity": 195,
+    "availableQuantity": 188,
     "harvestDate": "2025-10-10"
   },
   {

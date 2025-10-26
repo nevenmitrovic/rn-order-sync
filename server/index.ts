@@ -89,13 +89,8 @@ export const sendAdminNotification = async (order: Order): Promise<void> => {
       if (adminToken?.pushToken) {
         const message = {
           to: adminToken.pushToken,
-          sound: "default" as const,
           title: "Nova narudžbina",
           body: `Kreirana je nova narudžbina #${order.id} u vrednosti od $${order.totalAmount}`,
-          data: {
-            orderId: order.id,
-            type: "new_order",
-          },
           android: {
             channelId: "default",
           },
@@ -104,12 +99,10 @@ export const sendAdminNotification = async (order: Order): Promise<void> => {
         const messageResponse = await expo.sendPushNotificationsAsync([
           message,
         ]);
-        console.log("Message Response:", messageResponse);
       }
     }
   } catch (error) {
     console.error("Error sending admin notification:", error);
-    // Ne prekidamo izvršavanje ako notifikacija ne uspe
   }
 };
 
@@ -618,11 +611,11 @@ app.post(
       }
     }
 
-    // Save order and updated products
+    // Save order and update products
     orders.push(newOrder);
     saveOrders(orders);
     saveProducts(products);
-    await sendAdminNotification(newOrder);
+    // await sendAdminNotification(newOrder);
 
     res.status(201).json({
       message: "Order created successfully",

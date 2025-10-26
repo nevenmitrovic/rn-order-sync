@@ -14,7 +14,7 @@ import { getAuthToken } from "@/components/auth/utils";
 // };
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-console.log("Base URL:", BASE_URL);
+// console.log("Base URL:", BASE_URL);
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
