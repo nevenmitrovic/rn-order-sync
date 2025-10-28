@@ -120,8 +120,6 @@ export const usePushNotifications = (): PushNotificationState => {
     };
   }, []);
 
-  console.log(`expo: ${expoPushToken?.data}`, `notification: ${notification}`);
-
   return {
     expoPushToken,
     notification,

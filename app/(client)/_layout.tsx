@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 
@@ -12,10 +13,11 @@ import {
   useCartContext,
 } from "@/components/cart/contexts/CartContext";
 import { useAuth } from "@/components/auth/contexts/AuthContext";
+import { Pressable } from "react-native";
 
 function Layout() {
   const { getTotalItems } = useCartContext();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   const totalItems = Number(getTotalItems());
 
@@ -87,6 +89,19 @@ function Layout() {
             title: "Profile",
             tabBarIcon: ({ color, size }) => (
               <Entypo name="user" size={size} color={color} />
+            ),
+            headerRight: () => (
+              <Pressable
+                onPress={signOut}
+                hitSlop={20}
+                style={{ marginRight: 8, marginTop: 8 }}
+              >
+                <FontAwesome
+                  name="sign-out"
+                  color={colors.colorForeground}
+                  size={24}
+                />
+              </Pressable>
             ),
           }}
         />
