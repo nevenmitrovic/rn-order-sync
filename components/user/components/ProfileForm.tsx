@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   Pressable,
   StyleSheet,
@@ -7,11 +8,17 @@ import {
   View,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { CameraView, useCameraPermissions } from "expo-camera";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  Camera,
+  useCameraDevice,
+  useCameraFormat,
+  useCameraPermission,
+} from "react-native-vision-camera";
+import * as FileSystem from "expo-file-system";
 
 import { IUser } from "@/components/auth/types";
-import { colors, spacing } from "@/constants/theme";
+import { colors, spacing, typography } from "@/constants/theme";
 import FormTextInput from "@/components/common/FormTextInput";
 import MainButton from "@/components/common/MainButton";
 
@@ -20,28 +27,101 @@ export default function ProfileForm({
 }: {
   user: Omit<IUser, "password">;
 }) {
-  const [status, requestPermission] = useCameraPermissions();
-  const [imageUri, setImageUri] = useState();
-  const cameraRef = useRef<CameraView | null>(null);
-
+  const { hasPermission, requestPermission } = useCameraPermission();
+  const [imageUri, setImageUri] = useState<string | undefined>();
+  const [showCamera, setShowCamera] = useState(false);
+  const cameraRef = useRef<Camera>(null);
+  const device = useCameraDevice("front");
+  const format = useCameraFormat(device, [
+    { photoResolution: { width: 150, height: 150 } },
+  ]);
   const defaultImage = require("@/assets/user.png");
 
+  useEffect(() => {
+    console.log(imageUri);
+  }, [imageUri]);
+
   const takePicture = async () => {
-    const picture = await cameraRef.current?.takePictureAsync();
+    try {
+      const res = await cameraRef.current?.takePhoto();
+      if (res?.path) {
+        const name = res.path.split("/").pop();
+
+        // Otvori dokument direktorijum kao objekat
+        const dir = await FileSystem.getDirectoryForURIAsync(
+          FileSystem.documentDirectory!,
+        );
+        // Otvori fajl iz cache kao objekat
+        const file = await FileSystem.getFileForURIAsync(res.path);
+
+        // Kopiraj fajl u documentDirectory
+        await file.copy(dir, name);
+
+        const destUri = FileSystem.documentDirectory + name;
+        setImageUri("file://" + destUri);
+        setShowCamera(false);
+        console.log(name);
+      }
+    } catch (e) {
+      console.error(e);
+      setShowCamera(false);
+      Alert.alert("Camera Error", "Camera error caught. Please try again.");
+    }
   };
+  const toggleCameraView = () => setShowCamera((prev) => !prev);
+
+  if (!hasPermission)
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>
+          Camera access is required to update your profile picture. Please grant
+          camera permission in your device settings.
+        </Text>
+        <MainButton
+          buttonText="Request camera permission"
+          onPress={requestPermission}
+        />
+      </View>
+    );
+  if (device == null)
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>
+          No camera device found. Please ensure your device has a working
+          camera.
+        </Text>
+      </View>
+    );
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <TouchableOpacity activeOpacity={0.8}>
-          <Image source={defaultImage} style={styles.image} />
+          <Image
+            source={imageUri ? { uri: imageUri } : defaultImage}
+            style={styles.image}
+          />
           <Pressable
             style={styles.cameraIconContainer}
-            onPress={requestPermission}
+            onPress={toggleCameraView}
           >
             <AntDesign name="camera" size={20} color={colors.colorForeground} />
           </Pressable>
-          <CameraView ref={cameraRef} mode="picture" />
+          {showCamera && (
+            <View style={StyleSheet.absoluteFill}>
+              <Camera
+                ref={cameraRef}
+                style={StyleSheet.absoluteFill}
+                device={device}
+                isActive={true}
+                format={format}
+                photo={true}
+              />
+              <Pressable onPress={takePicture} style={styles.shutterBtn}>
+                <View style={styles.shutterBtnInner} />
+              </Pressable>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
       <View>
@@ -78,6 +158,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: spacing.md,
+    paddingHorizontal: spacing.md,
   },
   imageContainer: {
     position: "relative",
@@ -102,5 +183,26 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 10,
+  },
+  errorText: {
+    fontSize: typography.fontSizes.lg,
+    color: colors.colorForeground,
+  },
+  shutterBtn: {
+    backgroundColor: "transparent",
+    borderWidth: 5,
+    borderColor: "white",
+    width: 45,
+    height: 45,
+    borderRadius: 45,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: "auto",
+    alignSelf: "center",
+  },
+  shutterBtnInner: {
+    width: 27,
+    height: 27,
+    borderRadius: 50,
   },
 });

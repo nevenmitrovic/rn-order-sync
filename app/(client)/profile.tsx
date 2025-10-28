@@ -14,7 +14,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView>
         <ProfileForm user={user} />
       </ScrollView>
     </SafeAreaView>
@@ -25,8 +25,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.colorBackground,
-  },
-  contentContainer: {
-    padding: spacing.md,
   },
 });
