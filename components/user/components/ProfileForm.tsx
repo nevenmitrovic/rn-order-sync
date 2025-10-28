@@ -1,5 +1,14 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { useRef, useState } from "react";
 
 import { IUser } from "@/components/auth/types";
 import { colors, spacing } from "@/constants/theme";
@@ -11,16 +20,28 @@ export default function ProfileForm({
 }: {
   user: Omit<IUser, "password">;
 }) {
+  const [status, requestPermission] = useCameraPermissions();
+  const [imageUri, setImageUri] = useState();
+  const cameraRef = useRef<CameraView | null>(null);
+
   const defaultImage = require("@/assets/user.png");
+
+  const takePicture = async () => {
+    const picture = await cameraRef.current?.takePictureAsync();
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <TouchableOpacity activeOpacity={0.8}>
           <Image source={defaultImage} style={styles.image} />
-          <View style={styles.cameraIconContainer}>
+          <Pressable
+            style={styles.cameraIconContainer}
+            onPress={requestPermission}
+          >
             <AntDesign name="camera" size={20} color={colors.colorForeground} />
-          </View>
+          </Pressable>
+          <CameraView ref={cameraRef} mode="picture" />
         </TouchableOpacity>
       </View>
       <View>
