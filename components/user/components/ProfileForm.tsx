@@ -16,12 +16,14 @@ import {
   useCameraPermission,
 } from "react-native-vision-camera";
 import { File, Paths } from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
 
 import { IUser } from "@/components/auth/types";
 import { colors, spacing, typography } from "@/constants/theme";
 import FormTextInput from "@/components/common/FormTextInput";
 import MainButton from "@/components/common/MainButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function ProfileForm({
   user,
@@ -74,6 +76,23 @@ export default function ProfileForm({
   };
   const toggleCameraView = () => setShowCamera((prev) => !prev);
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      await AsyncStorage.setItem("userImgUri", result.assets[0].uri);
+      setImageUri(result.assets[0].uri);
+    }
+  };
+
   if (!hasPermission)
     return (
       <View style={styles.container}>
@@ -110,6 +129,13 @@ export default function ProfileForm({
             onPress={toggleCameraView}
           >
             <AntDesign name="camera" size={20} color={colors.colorForeground} />
+          </Pressable>
+          <Pressable style={styles.cameraGalleryContainer} onPress={pickImage}>
+            <MaterialCommunityIcons
+              name="view-gallery"
+              size={20}
+              color={colors.colorForeground}
+            />
           </Pressable>
           {showCamera && (
             <View style={StyleSheet.absoluteFill}>
@@ -187,6 +213,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 10,
+  },
+  cameraGalleryContainer: {
+    padding: 4,
+    borderRadius: 250,
+    borderWidth: 4,
+    borderColor: colors.border,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.cardBackground,
+    position: "absolute",
+    bottom: 0,
+    left: 10,
   },
   errorText: {
     fontSize: typography.fontSizes.lg,
