@@ -15,12 +15,13 @@ import {
   useCameraFormat,
   useCameraPermission,
 } from "react-native-vision-camera";
-import * as FileSystem from "expo-file-system";
+import { File, Paths } from "expo-file-system";
 
 import { IUser } from "@/components/auth/types";
 import { colors, spacing, typography } from "@/constants/theme";
 import FormTextInput from "@/components/common/FormTextInput";
 import MainButton from "@/components/common/MainButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfileForm({
   user,
@@ -38,29 +39,32 @@ export default function ProfileForm({
   const defaultImage = require("@/assets/user.png");
 
   useEffect(() => {
-    console.log(imageUri);
-  }, [imageUri]);
+    const getUserImgUri = async () => {
+      const uri = await AsyncStorage.getItem("userImgUri");
+      if (uri) {
+        setImageUri(uri);
+      }
+    };
+
+    getUserImgUri();
+  }, []);
 
   const takePicture = async () => {
     try {
       const res = await cameraRef.current?.takePhoto();
       if (res?.path) {
-        const name = res.path.split("/").pop();
-
-        // Otvori dokument direktorijum kao objekat
-        const dir = await FileSystem.getDirectoryForURIAsync(
-          FileSystem.documentDirectory!,
+        const name = res.path.split("/").pop() as string;
+        const file = new File(
+          Paths.document,
+          `${new Date().getTime()}-${name}`,
         );
-        // Otvori fajl iz cache kao objekat
-        const file = await FileSystem.getFileForURIAsync(res.path);
 
-        // Kopiraj fajl u documentDirectory
-        await file.copy(dir, name);
+        const sourceFile = new File(`file://${res.path}`);
+        sourceFile.copy(file);
 
-        const destUri = FileSystem.documentDirectory + name;
-        setImageUri("file://" + destUri);
+        setImageUri(file.uri);
+        await AsyncStorage.setItem("userImgUri", file.uri);
         setShowCamera(false);
-        console.log(name);
       }
     } catch (e) {
       console.error(e);
